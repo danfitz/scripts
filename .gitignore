@@ -1,0 +1,5 @@
+# Directories I don't want to show
+sheets/*
+
+# .gitkeep file to show empty folder in git
+sheets/.gitkeep
