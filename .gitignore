@@ -2,4 +2,4 @@
 sheets/*
 
 # .gitkeep file to show empty folder in git
-sheets/.gitkeep
+!sheets/.gitkeep
