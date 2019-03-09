@@ -1,9 +1,17 @@
-# expenseTracker
+# My Repository of Python Scripts
 
-The purpose of this script is to help automate my monthly expense tracking. I buy a lot of things each month and log it into Pennies on iOS. What this script does is reorganize the data in a way that's more useful for my analytics and review.
+This is a repository of Python scripts I've created. Consider it a one-stop shop for my scripts.
 
-```SQL
-This is a constantly expanding project. Future goals include:
-* Create SQL database
-* Convert into web app
-```
+All you have to do to run a script is:
+1. Clone this repository
+2. At the root directory, in the command line, type `python -m <moduleName>.run`
+
+## List of Scripts
+
+### pennyParser
+
+This script takes csv files from the iOS Pennies app and parses them for easy accounting.
+
+The feature roadmap for pennyParser is:
+* Build SQL database for data
+* Create web app

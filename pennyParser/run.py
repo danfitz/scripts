@@ -1,10 +1,14 @@
+# HOW SCRIPT WORKS:
+# 1. Place input csv files from Pennies into root directory of repository
+# 2. Run script from that root directory
+# 3. Let the parsing happen!
+
 import pandas as pd
-import urllib.parse as parse
 import os
 import datetime
 
 # Folder path of input CSV files
-folderPath = input(r"Provide absolute path of folder containing csv files: ")
+folderPath = os.getcwd()
 
 # Output DataFrames
 jouExpenses = pd.DataFrame(columns=["category", "item", "JOU", "datetime"])
@@ -13,6 +17,10 @@ johnsExpenses = pd.DataFrame(columns=["category", "item", "cost", "datetime"])
 
 # LOOP THROUGH EVERY CSV FILE
 for csvFile in os.listdir(folderPath):
+    # Skips files in folder that aren't .csv files
+    if not csvFile.endswith(".csv"):
+        continue
+
     # Use csv file to create DataFrame
     expenses_cols = ["date", "time", "item", "cost", "income", "balanceDay", "balancePeriod"]
     expenses = pd.read_csv(os.path.join(folderPath, csvFile), names=expenses_cols, header=0)
@@ -47,21 +55,21 @@ for csvFile in os.listdir(folderPath):
     # Loop through every row of DataFrame and parse data into one of the 3 lists above
     for index, row in expenses.iterrows():
         # Case 1: Dan bought on his own
-        if row["item"].startswith("D ") and row["item"].endswith(" D"):
+        if str(row["item"]).startswith("D ") and str(row["item"]).endswith(" D"):
             dansItem = []
             for cell in row:
                 dansItem.append(cell)
             dansItems.append(dansItem)
 
         # Case 2: John bought on his own
-        if row["item"].startswith("J ") and row["item"].endswith(" J"):
+        if str(row["item"]).startswith("J ") and str(row["item"]).endswith(" J"):
             johnsItem = []
             for cell in row:
                 johnsItem.append(cell)
             johnsItems.append(johnsItem)
 
         # Case 3: Dan bought for both
-        if row["item"].startswith("D ") and row["item"].endswith(" JD"):
+        if str(row["item"]).startswith("D ") and str(row["item"]).endswith(" JD"):
             dansItem = []
             johnsItem = []
             jouItem = []
@@ -76,7 +84,7 @@ for csvFile in os.listdir(folderPath):
             jouItems.append(jouItem)
             
         # Case 4: John bought for both
-        if row["item"].startswith("J ") and row["item"].endswith(" JD"):
+        if str(row["item"]).startswith("J ") and str(row["item"]).endswith(" JD"):
             dansItem = []
             johnsItem = []
             jouItem = []
@@ -92,7 +100,7 @@ for csvFile in os.listdir(folderPath):
             jouItems.append(jouItem)
 
         # Case 5: We bought separate but it's one entry
-        if row["item"].startswith("JD ") and row["item"].endswith(" JD"):
+        if str(row["item"]).startswith("JD ") and str(row["item"]).endswith(" JD"):
             dansItem = []
             johnsItem = []
             splitCost = row["cost"] / 2
@@ -117,6 +125,8 @@ for csvFile in os.listdir(folderPath):
     dansExpenses.sort_values(["category", "datetime"])
 
 # Turn output DataFrames into CSV files
-jouExpenses.to_csv(os.path.join(folderPath, "jouExpenses.csv"))
-dansExpenses.to_csv(os.path.join(folderPath, "dansExpenses.csv"))
-johnsExpenses.to_csv(os.path.join(folderPath, "johnsExpenses.csv"))
+jouExpenses.to_csv(os.path.join(folderPath, "jouExpenses.csv"), encoding="utf-8")
+dansExpenses.to_csv(os.path.join(folderPath, "dansExpenses.csv"), encoding="utf-8")
+johnsExpenses.to_csv(os.path.join(folderPath, "johnsExpenses.csv"), encoding="utf-8")
+
+print("Files have been successfully parsed!\nLook for jouExpenses.csv, dansExpenses.csv, and johnsExpenses.csv in your root directory")
