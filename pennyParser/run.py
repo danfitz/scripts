@@ -23,7 +23,7 @@ for csvFile in os.listdir(folderPath):
 
     # Use csv file to create DataFrame
     expenses_cols = ["date", "time", "item", "cost", "income", "balanceDay", "balancePeriod"]
-    expenses = pd.read_csv(os.path.join(folderPath, csvFile), names=expenses_cols, header=0)
+    expenses = pd.read_csv(os.path.join(folderPath, csvFile), names=expenses_cols, header=0, thousands=",") # <= Added thousands for parsing large numbers
 
     # Parse CSV file title to get category name & budget
     csvFileSplit = csvFile.split("-")
@@ -110,6 +110,27 @@ for csvFile in os.listdir(folderPath):
                 johnsItem.append(cell)
             dansItems.append(dansItem)
             johnsItems.append(johnsItem)
+        
+        # Case 6: Dan bought for John
+        if str(row["item"]).startswith("D ") and str(row["item"]).endswith(" J"):
+            johnsItem = []
+            jouItem = []
+            for cell in row:
+                johnsItem.append(cell)
+                jouItem.append(cell)
+            johnsItems.append(johnsItem)
+            jouItems.append(jouItem)
+        
+        # Case 7: John bought for Dan
+        if str(row["item"]).startswith("J ") and str(row["item"]).endswith(" D"):
+            dansItem = []
+            jouItem = []
+            for cell in row:
+                dansItem.append(cell)
+                jouItem.append(cell)
+            jouItem[2] = -jouItem[2] # because I owe John now
+            dansItems.append(dansItem)
+            jouItems.append(jouItem)
 
     # Create DataFrame out of lists
     jouItems = pd.DataFrame(jouItems, columns=["category", "item", "JOU", "datetime"])
