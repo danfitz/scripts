@@ -45,11 +45,12 @@ for csvFile in os.listdir(folderPath):
     expenses.drop(["date", "time", "income", "balanceDay", "balancePeriod"], axis=1, inplace=True)
     
     # Create empty lists
-    dansItems = [[category, "BUDGET BUMP", budget, ""]]
-    johnsItems = [[category, "BUDGET BUMP", budget, ""]]
-    if not expenses.empty:
-        dansItems[0][3] = (expenses["datetime"][0].replace(day=1))
-        johnsItems[0][3] = (expenses["datetime"][0].replace(day=1))
+    today = datetime.datetime.today()
+    startOfLastMonth = today.replace(month=today.month-1, day=1, hour=0, minute=0, second=0, microsecond=0)
+    budgetBumpRow = [category, "BUDGET BUMP", budget, startOfLastMonth.strftime("%Y-%m-%d %H:%M %p")]
+    
+    dansItems = [budgetBumpRow]
+    johnsItems = [budgetBumpRow]
     jouItems = []
     
     # Loop through every row of DataFrame and parse data into one of the 3 lists above
