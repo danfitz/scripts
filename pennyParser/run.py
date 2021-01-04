@@ -46,7 +46,15 @@ for csvFile in os.listdir(folderPath):
     
     # Create empty lists
     today = datetime.datetime.today()
-    startOfLastMonth = today.replace(month=today.month-1, day=1, hour=0, minute=0, second=0, microsecond=0)
+    startOfLastMonth = today.replace(
+        year=today.year if today.month != 1 else today.year-1,
+        month=today.month-1 if today.month != 1 else 12,
+        day=1,
+        hour=0,
+        minute=0,
+        second=0,
+        microsecond=0
+    )
     budgetBumpRow = [category, "BUDGET BUMP", budget, startOfLastMonth.strftime("%Y-%m-%d %H:%M %p")]
     
     dansItems = [budgetBumpRow]
